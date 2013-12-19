@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def costFunction(theta, x, y):
     return -(y * np.log(sigmoid(np.dot(theta.transpose(), x))) + (1 - y) * np.log(sigmoid(1 - np.dot(theta.transpose(), x))))
 
@@ -23,3 +22,14 @@ def stochasticGradientDescent(df, label, iterations, alpha, Lambda):
             theta = theta - alpha * grad(theta, x, y, Lambda)
     return theta, costsList
 
+def predict(df, theta, label):
+    features = list(df.columns)
+    features.remove(label)
+    X = np.array(df.loc[:, features[0]:features[-1]])
+    prediction = sigmoid(np.dot(X, theta)) >= 0.5
+    return prediction.astype(int)
+
+def accuracy(df, prediction, label):
+    accur = (np.array(df[label]) == prediction)
+    accur = accur.astype(int)
+    return (float(accur.sum()) / accur.size) * 100
