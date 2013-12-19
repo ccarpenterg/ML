@@ -6,30 +6,27 @@ def costFunction(theta, x, y):
 def grad(theta, x, y, Lambda):
     return (sigmoid(np.dot(theta.transpose(), x)) - y) * x + Lambda * np.r_[0, theta[1:]]
 
-def stochasticGradientDescent(df, label, iterations, alpha, Lambda):
-    features = list(df.columns)
-    features.remove(label)
-    theta = np.zeros(len(features))
-    training_indexes = df.index.values
+def stochasticGradientDescent(X, labels, iterations, alpha, Lambda):
+    m, n = X.shape
+    theta = np.zeros(n)
+    training_indexes = X.index.values
     np.random.shuffle(training_indexes)
     costsList = []
     for iteration in range(iterations):
         for i in training_indexes:
             alpha = 4 / (1.0 + iteration + i) + 0.01
-            x = np.array(df.loc[i, features[0]:features[-1]])
-            y = df.loc[i, label]
+            x = np.array(X.loc[i])
+            y = labels.loc[i]
             costsList.append(costFunction(theta, x, y))
             theta = theta - alpha * grad(theta, x, y, Lambda)
     return theta, costsList
 
-def predict(df, theta, label):
-    features = list(df.columns)
-    features.remove(label)
-    X = np.array(df.loc[:, features[0]:features[-1]])
+def predict(X, theta):
+    X = np.matrix(X)
     prediction = sigmoid(np.dot(X, theta)) >= 0.5
     return prediction.astype(int)
 
-def accuracy(df, prediction, label):
-    accur = (np.array(df[label]) == prediction)
+def accuracy(y, prediction):
+    accur = (np.array(y) == prediction)
     accur = accur.astype(int)
     return (float(accur.sum()) / accur.size) * 100
