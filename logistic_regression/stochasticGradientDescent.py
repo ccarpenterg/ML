@@ -6,7 +6,7 @@ def costFunction(theta, x, y):
 def grad(theta, x, y, Lambda):
     return (sigmoid(np.dot(theta.transpose(), x)) - y) * x + Lambda * np.r_[0, theta[1:]]
 
-def stochasticGradientDescent(X, labels, iterations, alpha, Lambda):
+def stochasticGradientDescent(X, labels, iterations, alpha, Lambda, oscillation_factor=4):
     m, n = X.shape
     theta = np.zeros(n)
     training_indexes = X.index.values
@@ -14,11 +14,11 @@ def stochasticGradientDescent(X, labels, iterations, alpha, Lambda):
     costsList = []
     for iteration in range(iterations):
         for i in training_indexes:
-            alpha = 4 / (1.0 + iteration + i) + 0.01
+            stochasticAlpha = oscillation_factor / (1.0 + iteration + i) + alpha
             x = np.array(X.loc[i])
             y = labels.loc[i]
             costsList.append(costFunction(theta, x, y))
-            theta = theta - alpha * grad(theta, x, y, Lambda)
+            theta = theta - stochasticAlpha * grad(theta, x, y, Lambda)
     return theta, costsList
 
 def predict(X, theta):
