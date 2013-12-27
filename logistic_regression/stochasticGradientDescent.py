@@ -11,7 +11,6 @@ def stochasticGradientDescent(X, labels, iterations, alpha, Lambda, oscillation_
     m, n = X.shape
     theta = np.zeros(n)
     training_indexes = X.index.values
-    np.random.shuffle(training_indexes)
     costsList = []
     for iteration in range(iterations):
         for i in training_indexes:
