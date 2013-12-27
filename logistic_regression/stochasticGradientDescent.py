@@ -1,5 +1,5 @@
 import numpy as np
-from logistic_regression.base import sigmoid
+from base import sigmoid
 
 def costFunction(theta, x, y):
     return -(y * np.log(sigmoid(np.dot(theta.transpose(), x))) + (1 - y) * np.log(sigmoid(1 - np.dot(theta.transpose(), x))))
